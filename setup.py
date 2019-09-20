@@ -12,11 +12,11 @@ else:
         long_description = f.read()
 
 version = {}
-with open(os.path.join(_here, 'mp-crawl', 'version.py')) as f:
+with open(os.path.join(_here, 'mpcrawl', 'version.py')) as f:
     exec(f.read(), version)
 
 setup(
-    name='mp-crawl',
+    name='mpcrawl',
     version=version['__version__'],
     description=('High-level interface to obtain data from Marktplaats.nl.'),
     long_description=long_description,
@@ -24,7 +24,7 @@ setup(
     author_email='markvanderbroek@gmail.com',
     url='https://github.com/markkvdb/marktplaats-crawler',
     license='MPL-2.0',
-    packages=['mp-crawl'],
+    packages=['mpcrawl'],
 #   no dependencies in this example
 #   install_requires=[
 #       'dependency==1.2.3',
@@ -33,7 +33,7 @@ setup(
 #   scripts=['bin/a-script'],
     include_package_data=True,
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha,
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Science/Research',
         'Programming Language :: Python :: 3.7'],
     )
