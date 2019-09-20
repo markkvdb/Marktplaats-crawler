@@ -105,3 +105,4 @@ venv.bak/
 
 # don't save visual studio code 
 .vscode
+.Rproj.user

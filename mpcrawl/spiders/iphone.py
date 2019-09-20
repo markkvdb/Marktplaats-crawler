@@ -27,11 +27,10 @@ class iphoneScraper(scrapy.Spider):
           l.add_xpath('location', 'string(.//span[@class="mp-Listing-location"])')
 
           # Execute xpath searches and process item
-          l.load_item()
+          yield l.load_item()
 
         current_page = int(re.search(r'(?:p/)(\d+)', response.request.url)[1])
-
-        if current_page < 30:
-          next_url = re.sub(r'p/\d+', 'p/' + str(current_page+1), response.request.url)
-          yield scrapy.Request(next_url, callback=self.parse)
+        next_url = re.sub(r'p/\d+', 'p/' + str(current_page+1), response.request.url)
+        
+        yield scrapy.Request(next_url, callback=self.parse)
 
