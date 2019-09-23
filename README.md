@@ -9,23 +9,33 @@ These instruction will get you a copy of the project up and running. I provide t
 ### Prerequisites
 
 You have to download Anaconda and activate the appriorate virtual environment, e.g. create environment `mpcrawler`.
-```
+
+```bash
 conda create mpcrawler
 conda activate mpcrawler
 ```
 
-You also need MongoDB Community to store all scraped data. install MongoDB, start it, and create a database under the name `mpcrawler`.
+You also need MongoDB Community to store all scraped data. install MongoDB, start it, and create a database under the name `mpcrawler`. For MacOS, you can do:
+
+```bash
+brew install mongodb-community
+
+# Activate mongo manually
+mongod --config /usr/local/etc/mongod.conf
+```
 
 ### Installing
 
 Second, we download the project using github in a chosen location and open it.
-```
+
+```bash
 git clone https://github.com/markkvdb/Marktplaats-crawler.git
 cd Marktplaats-crawler
 ```
 
 We need a few python modules to run the program.
-```
+
+```bash
 conda env create -f environment.yml
 ```
 
