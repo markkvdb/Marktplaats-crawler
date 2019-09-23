@@ -18,7 +18,7 @@ class iphoneScraper(scrapy.Spider):
       self.logger.info('No more data.')
     else:
       for link in listing_links:
-        # Save all elements
+        # Save all elements if we have not yet visited link
         yield response.follow(link, self.process_listing)
 
       # Find next page and visit (site nevers gives a 404 error)
