@@ -12,7 +12,7 @@ data <- m$find() %>% as_tibble() %>%
 # Filter some users
 data <- data %>%
   filter(seller != "Biedveilingen") %>% 
-  distinct(url, scrap_date, .keep_all=TRUE)
+  distinct(url, scrap_date, price, .keep_all=TRUE)
 
 # Create variable to indicate advertisement
 data <- data %>%
@@ -65,11 +65,16 @@ data.listings <- data.listings %>%
                                                     "iphone 11 Pro", "iphone 11 Pro Max"),
                               ordered=TRUE))
 
+# Only keep listings younger than 7 days
+data.listings.new <- data.listings %>%
+  mutate(scrap_date = dmy(scrap_date)) %>%
+  filter(ymd(scrap_date) - as_date(post_date) <= days(7))
+
 # Check what we missed
 data.listings.missing <- data.listings %>%
   filter(is.na(iphone_type))
 
-data.phone <- data.listings %>%
+data.phone <- data.listings.new %>%
   group_by(iphone_type) %>%
   summarise(N = n(),
             avg_price = mean(price),
@@ -78,12 +83,13 @@ data.phone <- data.listings %>%
 ggplot(data.phone, aes(x=iphone_type, y=avg_price)) +
   geom_bar(stat="identity") +
   labs(x="", y="Average price") +
-  scale_y_continuous(labels = scales::dollar_format(suffix = "", prefix = "€")) +
+  scale_y_continuous(labels = scales::dollar_format(suffix = "", prefix = "€"),
+                     breaks = c(0, 250, 500, 750, 1000, 1250, 1500)) +
   theme_pubr() +
   theme(panel.grid.major.y = element_line(color="#858585"),
         axis.text.x = element_text(angle=-90, vjust = 0.1, hjust=0))
 
-data.first.analysis <- data.listings %>%
+data.first.analysis <- data.listings.new %>%
   filter(!is.na(iphone_type), post_date >= ymd('2019-01-01')) %>%
   mutate(week = week(post_date)) %>%
   group_by(week, iphone_type) %>%
@@ -92,7 +98,6 @@ data.first.analysis <- data.listings %>%
 
 # Plot
 ggplot(data.first.analysis, aes(x=week, y=avg_price, colour=iphone_type)) +
-  annotate(geom="rect", xmin=35, xmax=38, ymin=-Inf, ymax=Inf, fill="grey", alpha=0.3) + 
   geom_line() +
   geom_point() + 
   labs(x="Week number", y="Average price", colour="",
@@ -100,7 +105,7 @@ ggplot(data.first.analysis, aes(x=week, y=avg_price, colour=iphone_type)) +
        caption = "Source: marktplaats.nl") +
   scale_y_continuous(labels = scales::dollar_format(suffix = "", prefix = "€"),
                      breaks = c(0, 250, 500, 750, 1000, 1250, 1500)) +
-  scale_x_continuous(breaks = c(1, 10, 20, 30, 38)) +
+  scale_x_continuous(breaks = c(37, 38, 39)) +
   theme_pubr() +
   theme(panel.grid.major.y = element_line(color="#d6d6d6"),
         legend.position = "bottom")
